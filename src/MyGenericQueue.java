@@ -1,10 +1,20 @@
 
-public class MyGenericQueue<E> 
+public class MyGenericQueue<E> extends MyLinkedList<E>
 {
 
-	public MyGenericQueue()
-	{
-		// TODO Auto-generated constructor stub
-	}
+		// head of queue is first in list.
+	
+		public E dequeue() 
+		{
+			E toReturn = this.get(0);
+			if(toReturn == null) return null;
+			
+			this.remove(0);
+			return toReturn;
+		}
 
+		public void enqueue(E toQueue)
+		{
+			this.add(toQueue);
+		}
 }
