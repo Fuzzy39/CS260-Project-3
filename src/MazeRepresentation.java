@@ -30,7 +30,7 @@ public class MazeRepresentation
 			throw new IllegalArgumentException("Wrong height for maze");
 		}
 		
-		representation = new char[width*2][height+1];
+		representation = new char[height+1][width*2];
 		
 		int i = 0;
 		for(String s: rows)
@@ -47,7 +47,41 @@ public class MazeRepresentation
 	
 	public MazeRepresentation(Maze m)
 	{
+		this.width = m.getWidth();
+		this.height = m.getHeight();
 		
+		// create a blank representation.
+		this.representation = new char[width*2][height+1];
+		for(int x = 0; x<width*2; x++)
+		{
+			for(int y = 0; y<height+1; y++)
+			{
+				this.representation[y][x]=' ';
+			}
+		}
+		
+		// fill it up
+		for(int x = 0; x<width; x++)
+		{
+			for(int y = 0; y<height; y++)
+			{
+				int charx = 2*x +1;
+				int chary = y+1;
+				representation[charx][chary-1] 
+						= m.getCell(charx, chary).getPassable(Direction.NORTH)?' ':'_';
+				representation[charx][chary] 
+						= m.getCell(charx, chary).getPassable(Direction.SOUTH)?' ':'_';
+				representation[charx+1][chary] 
+						= m.getCell(charx, chary).getPassable(Direction.EAST)?' ':'|';
+				representation[charx-1][chary] 
+						= m.getCell(charx, chary).getPassable(Direction.WEST)?' ':'|';
+				if(m.getCell(charx, chary).getOnPath())
+				{
+					representation[charx][chary] = '#';
+				}
+						
+			}
+		}
 	}
 	
 	private Cell getCell(int x, int y)
@@ -55,10 +89,10 @@ public class MazeRepresentation
 		// the X of the center character of a cell is 2x+1
 		int charx = 2*x +1;
 		int chary = y+1;
-		boolean north = representation[charx][chary-1] == ' ';
-		boolean south = representation[charx][chary] == ' ';
-		boolean east = representation[charx+1][chary] == ' ';
-		boolean west = representation[charx-1][chary] == ' ';
+		boolean north = representation[chary-1][charx] == ' ';
+		boolean south = representation[chary][charx] == ' ';
+		boolean east = representation[chary][charx+1] == ' ';
+		boolean west = representation[chary][charx-1] == ' ';
 		return new Cell(north, south, east, west);
 	}
 	
@@ -83,5 +117,16 @@ public class MazeRepresentation
 	
 	public int getWidth() { return width; }
 	public int getHeight() { return height; }
+	
+	
+	public String toString() 
+	{
+		String toReturn =height+"\n"+width+"\n";
+		for(int y = 0; y<height+1; y++)
+		{
+			toReturn +=String.valueOf(representation[y])+"\n";
+		}
+		return toReturn;
+	}
 	
 }

@@ -12,5 +12,10 @@ public class Maze
 		height = cells[0].length;
 		this.cells = cells;
 	}
+	
+	public Cell getCell(int x, int y) {return cells[x][y];}
+	
+	public int getWidth() { return width; }
+	public int getHeight() { return height; }
 
 }
